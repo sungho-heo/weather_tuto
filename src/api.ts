@@ -22,7 +22,6 @@ const fetchWeatherData = async (lat: number, lon: number) => {
       },
     });
 
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error("날씨 데이터를 받아오지 못했습니다.", error);
@@ -35,10 +34,9 @@ export const main = async () => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
-    console.log(`User location: Latitude ${latitude}, Longitude ${longitude}`);
-
     // 위치 정보를 기반으로 날씨 데이터 요청
-    await fetchWeatherData(latitude, longitude);
+    const weatherData = await fetchWeatherData(latitude, longitude);
+    return weatherData;
   } catch (error) {
     console.error("Error getting user location:", error);
   }
