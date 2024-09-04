@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { main } from "./api";
+import getWeatherCode from "./weatherCode";
 const App: React.FC = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,9 +51,17 @@ const App: React.FC = () => {
     0,
     todayTimes.length
   );
+
+  const todayWeatherCodes = weatherData.hourly.weathercode.slice(
+    0,
+    todayTimes.length
+  );
+
   return (
     <div>
-      <h2>오늘의 날씨</h2>
+      <h2>
+        오늘의 날씨 {getWeatherCode(weatherData.current_weather.weathercode)}
+      </h2>
       <ul>
         {todayTimes.map((time: string, index: number) => (
           <li key={time}>

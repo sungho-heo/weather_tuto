@@ -18,7 +18,8 @@ const fetchWeatherData = async (lat: number, lon: number) => {
         latitude: lat,
         longitude: lon,
         current_weather: true,
-        hourly: "temperature_2m,relative_humidity_2m,wind_speed_10m",
+        hourly:
+          "temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode",
       },
     });
 
