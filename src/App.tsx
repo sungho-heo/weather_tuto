@@ -66,6 +66,8 @@ const App: React.FC = () => {
         {todayTimes.map((time: string, index: number) => (
           <li key={time}>
             {formatTimeTo12Hour(time)}: {todayTemperatures[index]}°C
+            <br></br>
+            {getWeatherCode(todayWeatherCodes[index])}
           </li>
         ))}
       </ul>
