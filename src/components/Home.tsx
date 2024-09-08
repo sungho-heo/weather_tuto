@@ -31,6 +31,7 @@ const Home: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       const data = await main(); // main 함수 호출
+      console.log(data);
       setWeatherData(data); // 받아온 데이터 저장
       setLoading(false);
     };
@@ -53,6 +54,11 @@ const Home: React.FC = () => {
     todayTimes.length
   );
 
+  const todayHumidity = weatherData.hourly.relative_humidity_2m.slice(
+    0,
+    todayTimes.length
+  );
+
   const todayWeatherCodes = weatherData.hourly.weathercode.slice(
     0,
     todayTimes.length
@@ -67,9 +73,10 @@ const Home: React.FC = () => {
         {todayTimes.map((time: string, index: number) => (
           <li key={time}>
             <h3>
-              {formatTimeTo12Hour(time)}: {todayTemperatures[index]}°C
-              <br></br>
+              {formatTimeTo12Hour(time)}: {todayTemperatures[index]}°C 날씨:
               {getWeatherCode(todayWeatherCodes[index])}
+              <br></br>
+              습도:{todayHumidity[index]}%
             </h3>
           </li>
         ))}
