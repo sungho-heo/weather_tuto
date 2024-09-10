@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import { main } from "../api";
 import getWeatherCode from "../weatherCode";
+
+// css
+const WeatherLi = styled.ul`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
+  justify-content: center;
+`;
 
 const Home: React.FC = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
@@ -63,13 +72,16 @@ const Home: React.FC = () => {
     0,
     todayTimes.length
   );
+  const todayDay = new Date().getUTCDate();
+  const todayMonth = new Date().getMonth() + 1;
+  console.log(todayDay, todayMonth);
   return (
     <div>
       <h2>
-        오늘의 날씨:
+        {todayMonth}.{todayDay}의 날씨:
         {getWeatherCode(weatherData.current_weather.weathercode)}
       </h2>
-      <ul>
+      <WeatherLi>
         {todayTimes.map((time: string, index: number) => (
           <li key={time}>
             <h3>
@@ -80,7 +92,7 @@ const Home: React.FC = () => {
             </h3>
           </li>
         ))}
-      </ul>
+      </WeatherLi>
     </div>
   );
 };
