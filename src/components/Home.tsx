@@ -11,6 +11,13 @@ const WeatherLi = styled.ul`
   justify-content: center;
 `;
 
+const TodayMain = styled.h2`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
 const Home: React.FC = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -74,13 +81,16 @@ const Home: React.FC = () => {
   );
   const todayDay = new Date().getUTCDate();
   const todayMonth = new Date().getMonth() + 1;
-  console.log(todayDay, todayMonth);
   return (
     <div>
-      <h2>
-        {todayMonth}.{todayDay}의 날씨:
-        {getWeatherCode(weatherData.current_weather.weathercode)}
-      </h2>
+      <div>
+        <TodayMain>
+          {todayMonth}.{todayDay}의 하룻동안의 날씨:
+          {weatherData.current_weather.temperature}°C
+          <br></br>
+          {getWeatherCode(weatherData.current_weather.weathercode)}
+        </TodayMain>
+      </div>
       <WeatherLi>
         {todayTimes.map((time: string, index: number) => (
           <li key={time}>
