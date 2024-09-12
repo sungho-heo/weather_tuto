@@ -90,6 +90,11 @@ const Home: React.FC = () => {
           <br></br>
           {getWeatherCode(weatherData.current_weather.weathercode)}
         </TodayMain>
+        <TodayMain>
+          최고기온:{Math.max(...weatherData.hourly.temperature_2m)}°C
+          <br></br>
+          최저기온:{Math.min(...weatherData.hourly.temperature_2m)}°C
+        </TodayMain>
       </div>
       <WeatherLi>
         {todayTimes.map((time: string, index: number) => (
