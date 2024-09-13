@@ -20,6 +20,7 @@ const TodayMain = styled.h2`
 
 const Home: React.FC = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
+  const [geoData, setgeoData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   // 특정 날짜인지 확인하는 함수
@@ -47,8 +48,11 @@ const Home: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       const data = await main(); // main 함수 호출
-      console.log(data);
-      setWeatherData(data); // 받아온 데이터 저장
+      if (data?.locationData) {
+        const listData = data?.locationData.split(",");
+        setgeoData(listData);
+      }
+      setWeatherData(data?.weatherData); // 받아온 데이터 저장
       setLoading(false);
     };
 
@@ -85,9 +89,10 @@ const Home: React.FC = () => {
     <div>
       <div>
         <TodayMain>
-          {todayMonth}.{todayDay}의 하룻동안의 날씨:
-          {weatherData.current_weather.temperature}°C
+          {geoData[2]} {geoData[1]} 날짜:{todayMonth}.{todayDay}
           <br></br>
+          날씨:
+          {weatherData.current_weather.temperature}°C &nbsp;
           {getWeatherCode(weatherData.current_weather.weathercode)}
         </TodayMain>
         <TodayMain>

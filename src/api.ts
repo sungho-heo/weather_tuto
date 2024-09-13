@@ -1,5 +1,39 @@
 import axios from "axios";
 
+// type
+interface NominatimResult {
+  display_name: string;
+}
+
+// OpenStreetMap 역지오코딩 api
+const getLocationFromCoordinates = async (
+  lat: number,
+  lon: number
+): Promise<string | null> => {
+  try {
+    const response = await axios.get<NominatimResult>(
+      "https://nominatim.openstreetmap.org/reverse",
+      {
+        params: {
+          lat: lat,
+          lon: lon,
+          format: "json",
+        },
+      }
+    );
+
+    if (response.data) {
+      return response.data.display_name;
+    } else {
+      console.error("No location data found");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error fetching location data:", error);
+    return null;
+  }
+};
+
 // 브라우저의 Geolocation API를 통해서 사용자의 위치정보 데이터를 얻어옴.
 const getUserLocation = (): Promise<GeolocationPosition> => {
   return new Promise((resolve, reject) => {
@@ -37,7 +71,8 @@ export const main = async () => {
 
     // 위치 정보를 기반으로 날씨 데이터 요청
     const weatherData = await fetchWeatherData(latitude, longitude);
-    return weatherData;
+    const locationData = await getLocationFromCoordinates(latitude, longitude);
+    return { weatherData, locationData };
   } catch (error) {
     console.error("Error getting user location:", error);
   }
