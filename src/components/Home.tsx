@@ -38,7 +38,7 @@ const Home: React.FC = () => {
   // 시간을 "오전/오후 몇 시" 형식으로 변환하는 함수
   const formatTimeTo12Hour = (timestamp: string): string => {
     const date = new Date(timestamp);
-    const hours = date.getUTCHours();
+    const hours = date.getHours();
     const formattedHours = hours % 12 || 12; // 12시간 형식으로 변환
     const period = hours < 12 ? "오전" : "오후";
 
@@ -85,6 +85,7 @@ const Home: React.FC = () => {
   );
   const todayDay = new Date().getUTCDate();
   const todayMonth = new Date().getMonth() + 1;
+  console.log(todayTimes);
   return (
     <div>
       <div>
