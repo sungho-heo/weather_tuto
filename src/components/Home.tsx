@@ -74,6 +74,11 @@ const Home: React.FC = () => {
     todayTimes.length
   );
 
+  const todayWindspeed = weatherData.hourly.wind_speed_10m.slice(
+    0,
+    todayTimes.length
+  );
+
   const todayHumidity = weatherData.hourly.relative_humidity_2m.slice(
     0,
     todayTimes.length
@@ -85,7 +90,22 @@ const Home: React.FC = () => {
   );
   const todayDay = new Date().getUTCDate();
   const todayMonth = new Date().getMonth() + 1;
-  console.log(todayTimes);
+
+  // 체감온도 구하기
+  const temp = (temperature: number, windSpeed: number): number => {
+    if (temperature > 10 || windSpeed < 4.8) {
+      // 체감온도 공식은 기온 10°C 이하, 풍속 4.8km/h 이상에서 적용
+      return temperature;
+    }
+
+    const windChill =
+      13.12 +
+      0.6215 * temperature -
+      11.37 * Math.pow(windSpeed, 0.16) +
+      0.3965 * temperature * Math.pow(windSpeed, 0.16);
+    return Math.round(windChill * 10) / 10; // 소수점 1자리까지 반올림
+  };
+
   return (
     <div>
       <div>
@@ -95,6 +115,12 @@ const Home: React.FC = () => {
           날씨:
           {weatherData.current_weather.temperature}°C &nbsp;
           {getWeatherCode(weatherData.current_weather.weathercode)}
+          &nbsp; 체감온도:
+          {temp(
+            weatherData.current_weather.temperature,
+            weatherData.current_weather.windSpeed
+          )}
+          °C
         </TodayMain>
         <TodayMain>
           최고기온:{Math.max(...weatherData.hourly.temperature_2m)}°C
@@ -106,7 +132,11 @@ const Home: React.FC = () => {
         {todayTimes.map((time: string, index: number) => (
           <li key={time}>
             <h3>
-              {formatTimeTo12Hour(time)}: {todayTemperatures[index]}°C 날씨:
+              {formatTimeTo12Hour(time)}: {todayTemperatures[index]}°C &nbsp;
+              체감온도: {temp(todayTemperatures[index], todayWindspeed[index])}
+              °C
+              <br></br>
+              날씨:
               {getWeatherCode(todayWeatherCodes[index])}
               <br></br>
               습도:{todayHumidity[index]}%
