@@ -5,6 +5,8 @@ interface NominatimResult {
   display_name: string;
 }
 
+const BaseUrl = "https://api.open-meteo.com/v1/forecast";
+
 // OpenStreetMap 역지오코딩 api
 const getLocationFromCoordinates = async (
   lat: number,
@@ -45,13 +47,16 @@ const getUserLocation = (): Promise<GeolocationPosition> => {
   });
 };
 
+// 자외선 데이터도 받아오기
 const fetchWeatherData = async (lat: number, lon: number) => {
   try {
-    const response = await axios.get("https://api.open-meteo.com/v1/forecast", {
+    const response = await axios.get(BaseUrl, {
       params: {
         latitude: lat,
         longitude: lon,
         current_weather: true,
+        daily: "uv_index_max",
+        timezone: "auto",
         hourly:
           "temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode",
       },

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { main } from "../api";
 import getWeatherCode from "../weatherCode";
+import weatherUv from "../weatherUv";
 
 // css
 const WeatherLi = styled.ul`
@@ -106,25 +107,25 @@ const Home: React.FC = () => {
     return Math.round(windChill * 10) / 10; // 소수점 1자리까지 반올림
   };
 
+  console.log(weatherData);
   return (
     <div>
       <div>
         <TodayMain>
           {geoData[2]} {geoData[1]} 날짜:{todayMonth}.{todayDay}
-          <br></br>
-          날씨:
+          &nbsp; 기온:
           {weatherData.current_weather.temperature}°C &nbsp;
           {getWeatherCode(weatherData.current_weather.weathercode)}
-          &nbsp; 체감온도:
+          <br></br>
+          체감온도:
           {temp(
             weatherData.current_weather.temperature,
             weatherData.current_weather.windSpeed
           )}
-          °C
+          °C &nbsp; 자외선 지수: {weatherUv(weatherData.daily.uv_index_max[0])}
         </TodayMain>
         <TodayMain>
-          최고기온:{Math.max(...weatherData.hourly.temperature_2m)}°C
-          <br></br>
+          최고기온:{Math.max(...weatherData.hourly.temperature_2m)}°C &nbsp;
           최저기온:{Math.min(...weatherData.hourly.temperature_2m)}°C
         </TodayMain>
       </div>
