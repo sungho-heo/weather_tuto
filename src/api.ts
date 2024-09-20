@@ -55,7 +55,7 @@ const fetchWeatherData = async (lat: number, lon: number) => {
         latitude: lat,
         longitude: lon,
         current_weather: true,
-        daily: "uv_index_max",
+        daily: ["uv_index_max", "sunrise", "sunset"],
         timezone: "auto",
         hourly:
           "temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode",

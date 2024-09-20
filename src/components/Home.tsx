@@ -107,7 +107,15 @@ const Home: React.FC = () => {
     return Math.round(windChill * 10) / 10; // 소수점 1자리까지 반올림
   };
 
-  console.log(weatherData);
+  // 일몰 일출
+  const earlyTime = (timeStamp: string): string => {
+    const date = new Date(timeStamp);
+    const hours = date.getHours();
+    const formattedHours = hours % 12 || 12; // 12시간 형식으로 변환
+    const min = date.getMinutes();
+    return `${formattedHours}:${min}`;
+  };
+
   return (
     <div>
       <div>
@@ -127,6 +135,9 @@ const Home: React.FC = () => {
         <TodayMain>
           최고기온:{Math.max(...weatherData.hourly.temperature_2m)}°C &nbsp;
           최저기온:{Math.min(...weatherData.hourly.temperature_2m)}°C
+          <br></br>
+          일출: 오전 {earlyTime(weatherData.daily.sunrise[0])} &nbsp; 일몰: 오후
+          &nbsp;{earlyTime(weatherData.daily.sunset[0])}
         </TodayMain>
       </div>
       <WeatherLi>
