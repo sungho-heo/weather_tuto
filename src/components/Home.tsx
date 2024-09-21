@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import WeatherChart from "./WeatherChart";
 import { main } from "../api";
 import getWeatherCode from "../weatherCode";
 import weatherUv from "../weatherUv";
@@ -116,6 +117,15 @@ const Home: React.FC = () => {
     return `${formattedHours}:${min}`;
   };
 
+  // chartData
+  const chartData = todayTimes.map((time: string, index: number) => {
+    const date = new Date(time);
+    return {
+      time: `${date.getHours()}:00`, // 시간지정.
+      temperature: todayTemperatures[index],
+    };
+  });
+
   return (
     <div>
       <div>
@@ -156,6 +166,7 @@ const Home: React.FC = () => {
           </li>
         ))}
       </WeatherLi>
+      <WeatherChart data={chartData} />
     </div>
   );
 };
