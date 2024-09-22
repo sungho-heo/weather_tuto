@@ -25,15 +25,34 @@ const WeatherChart: React.FC<WeatherChartProps> = ({ data }) => {
         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="time" />
+        {/* x축 라벨 개수 조정 */}
+        <XAxis
+          dataKey="time"
+          interval={0}
+          ticks={
+            data.length > 6
+              ? data
+                  .filter(
+                    (_, index) => index % Math.ceil(data.length / 6) === 0
+                  )
+                  .map((d) => d.time)
+              : data.map((d) => d.time)
+          }
+        />
         <YAxis />
-        <Tooltip />
+        <Tooltip
+          contentStyle={{ backgroundColor: "rgba(0,0,0, 0.7" }}
+          labelStyle={{ color: "#fff" }}
+          itemStyle={{ color: "#fff" }}
+        />
         <Legend />
         <Line
           type="monotone"
           dataKey="temperature"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
+          stroke="#8884d8" //선 색상
+          strokeWidth={2} //선 두께
+          dot={{ r: 4 }} //점 크기
+          activeDot={{ r: 6 }} // 할성화된 점 크기
         />
       </LineChart>
     </ResponsiveContainer>
