@@ -20,10 +20,31 @@ const TodayMain = styled.h2`
   width: 100%;
 `;
 
+const ToggleButtons = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  margin: 0 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #2980b9;
+  }
+`;
+
 const Home: React.FC = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
   const [geoData, setgeoData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [showWeatherInfo, setShowWeatherInfo] = useState<boolean>(true); // 기본적으로 보여주는 날씨데이터
+  const [showChart, setShowChart] = useState<boolean>(false); // 그래프 형태의 날씨데이터.
 
   // 특정 날짜인지 확인하는 함수
   const isToday = (timestamp: string): boolean => {
@@ -128,45 +149,66 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <div>
-        <TodayMain>
-          {geoData[2]} {geoData[1]} 날짜:{todayMonth}.{todayDay}
-          &nbsp; 기온:
-          {weatherData.current_weather.temperature}°C &nbsp;
-          {getWeatherCode(weatherData.current_weather.weathercode)}
-          <br></br>
-          체감온도:
-          {temp(
-            weatherData.current_weather.temperature,
-            weatherData.current_weather.windSpeed
-          )}
-          °C &nbsp; 자외선 지수: {weatherUv(weatherData.daily.uv_index_max[0])}
-        </TodayMain>
-        <TodayMain>
-          최고기온:{Math.max(...weatherData.hourly.temperature_2m)}°C &nbsp;
-          최저기온:{Math.min(...weatherData.hourly.temperature_2m)}°C
-          <br></br>
-          일출: 오전 {earlyTime(weatherData.daily.sunrise[0])} &nbsp; 일몰: 오후
-          &nbsp;{earlyTime(weatherData.daily.sunset[0])}
-        </TodayMain>
-      </div>
-      <WeatherLi>
-        {todayTimes.map((time: string, index: number) => (
-          <li key={time}>
-            <h3>
-              {formatTimeTo12Hour(time)}: {todayTemperatures[index]}°C &nbsp;
-              체감온도: {temp(todayTemperatures[index], todayWindspeed[index])}
-              °C
-              <br></br>
-              날씨:
-              {getWeatherCode(todayWeatherCodes[index])}
-              <br></br>
-              습도:{todayHumidity[index]}%
-            </h3>
-          </li>
-        ))}
-      </WeatherLi>
-      <WeatherChart data={chartData} />
+      <ToggleButtons>
+        <Button
+          onClick={() => {
+            setShowWeatherInfo(true);
+            setShowChart(false);
+          }}
+        >
+          기본 날씨 데이터
+        </Button>
+        <Button
+          onClick={() => {
+            setShowWeatherInfo(false);
+            setShowChart(true);
+          }}
+        >
+          그래프 날씨 데이터
+        </Button>
+      </ToggleButtons>
+      <TodayMain>
+        {geoData[2]} {geoData[1]} 날짜:{todayMonth}.{todayDay}
+        &nbsp; 기온:
+        {weatherData.current_weather.temperature}°C &nbsp;
+        {getWeatherCode(weatherData.current_weather.weathercode)}
+        <br></br>
+        체감온도:
+        {temp(
+          weatherData.current_weather.temperature,
+          weatherData.current_weather.windSpeed
+        )}
+        °C &nbsp; 자외선 지수: {weatherUv(weatherData.daily.uv_index_max[0])}
+      </TodayMain>
+      <TodayMain>
+        최고기온:{Math.max(...weatherData.hourly.temperature_2m)}°C &nbsp;
+        최저기온:{Math.min(...weatherData.hourly.temperature_2m)}°C
+        <br></br>
+        일출: 오전 {earlyTime(weatherData.daily.sunrise[0])} &nbsp; 일몰: 오후
+        &nbsp;{earlyTime(weatherData.daily.sunset[0])}
+      </TodayMain>
+      {showWeatherInfo && (
+        <div>
+          <WeatherLi>
+            {todayTimes.map((time: string, index: number) => (
+              <li key={time}>
+                <h3>
+                  {formatTimeTo12Hour(time)}: {todayTemperatures[index]}°C
+                  &nbsp; 체감온도:{" "}
+                  {temp(todayTemperatures[index], todayWindspeed[index])}
+                  °C
+                  <br></br>
+                  날씨: {getWeatherCode(todayWeatherCodes[index])}
+                  <br></br>
+                  습도:{todayHumidity[index]}%
+                </h3>
+              </li>
+            ))}
+          </WeatherLi>
+        </div>
+      )}
+
+      {showChart && <WeatherChart data={chartData} />}
     </div>
   );
 };
