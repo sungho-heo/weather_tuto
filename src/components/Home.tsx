@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import WeatherChart from "./WeatherChart";
+import { WeatherContainer } from "../styles/CommonStyles";
 import { main } from "../api";
-import getWeatherCode from "../weatherCode";
+import { getWeatherCode, getWeatherBackgroundImage } from "../weatherCode";
 import weatherUv from "../weatherUv";
 
 // css
@@ -148,7 +149,11 @@ const Home: React.FC = () => {
   });
 
   return (
-    <div>
+    <WeatherContainer
+      backgroundImage={getWeatherBackgroundImage(
+        weatherData.current_weather.weathercode
+      )}
+    >
       <ToggleButtons>
         <Button
           onClick={() => {
@@ -209,7 +214,7 @@ const Home: React.FC = () => {
       )}
 
       {showChart && <WeatherChart data={chartData} />}
-    </div>
+    </WeatherContainer>
   );
 };
 
