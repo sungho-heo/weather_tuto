@@ -46,6 +46,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [showWeatherInfo, setShowWeatherInfo] = useState<boolean>(true); // 기본적으로 보여주는 날씨데이터
   const [showChart, setShowChart] = useState<boolean>(false); // 그래프 형태의 날씨데이터.
+  const [selectDate, setSelectDate] = useState<number>(0);
 
   // 특정 날짜인지 확인하는 함수
   const isToday = (timestamp: string): boolean => {
