@@ -46,7 +46,7 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [showWeatherInfo, setShowWeatherInfo] = useState<boolean>(true); // 기본적으로 보여주는 날씨데이터
   const [showChart, setShowChart] = useState<boolean>(false); // 그래프 형태의 날씨데이터.
-  const [selectDate, setSelectDate] = useState<number>(0);
+  const [selectedDate, setSelectedDate] = useState<number>(0);
 
   // 특정 날짜인지 확인하는 함수
   const isToday = (timestamp: string): boolean => {
@@ -89,6 +89,44 @@ const Home: React.FC = () => {
   if (!weatherData) {
     return <h1> 날씨 데이터를 가져오지 못했습니다.</h1>;
   }
+
+  const today = new Date();
+
+  // 일주일치 날씨 요약 데이터 생성
+  const weeklyWeatherData = weatherData.daily.temperature_2m_max.map(
+    (maxTemp: number, index: number) => {
+      const date = new Date(today);
+      date.setDate(date.getDate() + index); // 현재 날짜에서 index일 추가
+      return {
+        date,
+        maxTemp,
+        minTemp: weatherData.daily.temperature_2m_min[index],
+        weatherCode: weatherData.daily.weather_code[index],
+      };
+    }
+  );
+
+  // 선택된 날짜의 상세 데이터 추출
+  const selectedDayWeather = weeklyWeatherData[selectedDate];
+  const selectedDayTimes = weatherData.hourly.time.filter((time: string) => {
+    const date = new Date(time);
+    return (
+      date.getUTCFullYear() === selectedDayWeather.date.getUTCFullYear() &&
+      date.getUTCMonth() === selectedDayWeather.date.getUTCMonth() &&
+      date.getUTCDate() === selectedDayWeather.date.getUTCDate()
+    );
+  });
+  const selectedDayTemperatures = weatherData.hourly.temperature_2m.slice(
+    selectedDate * 24,
+    (selectedDate + 1) * 24
+  );
+
+  // 요약 날짜 클릭 시 선택된 날짜 업데이트
+  const handleDayClick = (index: number) => {
+    setSelectedDate(index);
+    setShowWeatherInfo(true);
+    setShowChart(false);
+  };
 
   // 시간대별 데이터 필터링 (오늘 날짜만)
   const todayTimes = weatherData.hourly.time.filter((time: string) =>
@@ -173,6 +211,24 @@ const Home: React.FC = () => {
           그래프 날씨 데이터
         </Button>
       </ToggleButtons>
+
+      {/* 일주일치 요약 */}
+      <div>
+        {weeklyWeatherData.map((day, index) => (
+          <div
+            key={index}
+            className={selectedDate === index ? "active" : ""}
+            onClick={() => handleDayClick(index)}
+          >
+            {day.date.getMonth() + 1}/{day.date.getDate()}
+            <br />
+            {getWeatherCode(day.weatherCode)}
+            <br />
+            {day.maxTemp}°C / {day.minTemp}°C
+          </div>
+        ))}
+      </div>
+
       <TodayMain>
         {geoData[2]} {geoData[1]} 날짜:{todayMonth}.{todayDay}
         &nbsp; 기온:
