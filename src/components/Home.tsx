@@ -40,6 +40,21 @@ const Button = styled.button`
   }
 `;
 
+// 일주알 데이터 css
+const WeekWeatherSummary = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+`;
+const DaySummary = styled.div`
+  text-align: center;
+  cursor: pointer;
+  &.active {
+    font-weight: bold;
+    color: #3498db;
+  }
+`;
+
 const Home: React.FC = () => {
   const [weatherData, setWeatherData] = useState<any>(null);
   const [geoData, setgeoData] = useState<any>(null);
@@ -213,9 +228,9 @@ const Home: React.FC = () => {
       </ToggleButtons>
 
       {/* 일주일치 요약 */}
-      <div>
+      <WeekWeatherSummary>
         {weeklyWeatherData.map((day, index) => (
-          <div
+          <DaySummary
             key={index}
             className={selectedDate === index ? "active" : ""}
             onClick={() => handleDayClick(index)}
@@ -225,9 +240,9 @@ const Home: React.FC = () => {
             {getWeatherCode(day.weatherCode)}
             <br />
             {day.maxTemp}°C / {day.minTemp}°C
-          </div>
+          </DaySummary>
         ))}
-      </div>
+      </WeekWeatherSummary>
 
       <TodayMain>
         {geoData[2]} {geoData[1]} 날짜:{todayMonth}.{todayDay}
