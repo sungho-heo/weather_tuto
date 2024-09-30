@@ -264,8 +264,12 @@ const Home: React.FC = () => {
         일출: 오전 {earlyTime(weatherData.daily.sunrise[0])} &nbsp; 일몰: 오후
         &nbsp;{earlyTime(weatherData.daily.sunset[0])}
       </TodayMain>
-      {showWeatherInfo && (
+      {showWeatherInfo && selectedDayWeather && (
         <div>
+          <h3>{selectedDayWeather.date.toLocaleDateString()} 날씨</h3>
+          <h4>최고 기온: {selectedDayWeather.maxTemp}°C</h4>
+          <h4>최저 기온: {selectedDayWeather.minTemp}°C</h4>
+          <h4>날씨: {getWeatherCode(selectedDayWeather.weatherCode)}</h4>
           <WeatherLi>
             {todayTimes.map((time: string, index: number) => (
               <li key={time}>
