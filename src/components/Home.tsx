@@ -147,10 +147,6 @@ const Home: React.FC = () => {
   const todayTimes = weatherData.hourly.time.filter((time: string) =>
     isToday(time)
   );
-  const todayTemperatures = weatherData.hourly.temperature_2m.slice(
-    0,
-    todayTimes.length
-  );
 
   const todayWindspeed = weatherData.hourly.wind_speed_10m.slice(
     0,
@@ -194,11 +190,11 @@ const Home: React.FC = () => {
   };
 
   // chartData
-  const chartData = todayTimes.map((time: string, index: number) => {
+  const chartData = selectedDayTimes.map((time: string, index: number) => {
     const date = new Date(time);
     return {
       time: `${date.getHours()}:00`, // 시간지정.
-      temperature: todayTemperatures[index],
+      temperature: selectedDayTemperatures[index],
     };
   });
 
@@ -229,7 +225,7 @@ const Home: React.FC = () => {
 
       {/* 일주일치 요약 */}
       <WeekWeatherSummary>
-        {weeklyWeatherData.map((day, index) => (
+        {weeklyWeatherData.map((day: any, index: number) => (
           <DaySummary
             key={index}
             className={selectedDate === index ? "active" : ""}
@@ -271,12 +267,12 @@ const Home: React.FC = () => {
           <h4>최저 기온: {selectedDayWeather.minTemp}°C</h4>
           <h4>날씨: {getWeatherCode(selectedDayWeather.weatherCode)}</h4>
           <WeatherLi>
-            {todayTimes.map((time: string, index: number) => (
+            {selectedDayTimes.map((time: string, index: number) => (
               <li key={time}>
                 <h3>
-                  {formatTimeTo12Hour(time)}: {todayTemperatures[index]}°C
+                  {formatTimeTo12Hour(time)}: {selectedDayTemperatures[index]}°C
                   &nbsp; 체감온도:{" "}
-                  {temp(todayTemperatures[index], todayWindspeed[index])}
+                  {temp(selectedDayTemperatures[index], todayWindspeed[index])}
                   °C
                   <br></br>
                   날씨: {getWeatherCode(todayWeatherCodes[index])}
