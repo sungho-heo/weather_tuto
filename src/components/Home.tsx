@@ -107,6 +107,12 @@ const Home: React.FC = () => {
 
   const today = new Date();
 
+  // 선택한 날짜의 현 온도
+  const selectedDayTemperatures = weatherData.hourly.temperature_2m.slice(
+    selectedDate * 24,
+    (selectedDate + 1) * 24
+  );
+
   // 일주일치 날씨 요약 데이터 생성
   const weeklyWeatherData = weatherData.daily.temperature_2m_max.map(
     (maxTemp: number, index: number) => {
@@ -117,6 +123,8 @@ const Home: React.FC = () => {
         maxTemp,
         minTemp: weatherData.daily.temperature_2m_min[index],
         weatherCode: weatherData.daily.weather_code[index],
+        sunrise: weatherData.daily.sunrise[index],
+        sunset: weatherData.daily.sunset[index],
       };
     }
   );
@@ -131,10 +139,6 @@ const Home: React.FC = () => {
       date.getUTCDate() === selectedDayWeather.date.getUTCDate()
     );
   });
-  const selectedDayTemperatures = weatherData.hourly.temperature_2m.slice(
-    selectedDate * 24,
-    (selectedDate + 1) * 24
-  );
 
   // 요약 날짜 클릭 시 선택된 날짜 업데이트
   const handleDayClick = (index: number) => {
@@ -162,8 +166,8 @@ const Home: React.FC = () => {
     0,
     todayTimes.length
   );
-  const todayDay = new Date().getUTCDate();
-  const todayMonth = new Date().getMonth() + 1;
+  const todayDay = selectedDayWeather.date.getUTCDate();
+  const todayMonth = selectedDayWeather.date.getMonth() + 1;
 
   // 체감온도 구하기
   const temp = (temperature: number, windSpeed: number): number => {
@@ -186,6 +190,10 @@ const Home: React.FC = () => {
     const hours = date.getHours();
     const formattedHours = hours % 12 || 12; // 12시간 형식으로 변환
     const min = date.getMinutes();
+    if (date.getMinutes() < 10) {
+      const min = `"0"+${date.getMinutes()}`;
+      return `${formattedHours}:${min}`;
+    }
     return `${formattedHours}:${min}`;
   };
 
@@ -239,25 +247,27 @@ const Home: React.FC = () => {
           </DaySummary>
         ))}
       </WeekWeatherSummary>
-
+      {geoData && geoData.length >= 3 ? (
+        <TodayMain>
+          {geoData[2]} {geoData[1]}&nbsp; 날씨:{todayMonth}.{todayDay} 기온:
+          {}°C &nbsp;
+          {getWeatherCode(weatherData.current_weather.weathercode)}
+          <br></br>
+          체감온도:
+          {temp(
+            weatherData.current_weather.temperature,
+            weatherData.current_weather.windSpeed
+          )}
+          °C &nbsp; 자외선 지수: {weatherUv(weatherData.daily.uv_index_max[0])}
+        </TodayMain>
+      ) : (
+        <h1>위치 데이터를 가져올 수 없습니다</h1>
+      )}
       <TodayMain>
-        {geoData[2]} {geoData[1]} 날짜:{todayMonth}.{todayDay}
-        &nbsp; 기온:
-        {weatherData.current_weather.temperature}°C &nbsp;
-        {getWeatherCode(weatherData.current_weather.weathercode)}
+        최고기온:{selectedDayWeather.maxTemp}°C &nbsp; 최저기온:
+        {selectedDayWeather.minTemp}°C
         <br></br>
-        체감온도:
-        {temp(
-          weatherData.current_weather.temperature,
-          weatherData.current_weather.windSpeed
-        )}
-        °C &nbsp; 자외선 지수: {weatherUv(weatherData.daily.uv_index_max[0])}
-      </TodayMain>
-      <TodayMain>
-        최고기온:{Math.max(...weatherData.hourly.temperature_2m)}°C &nbsp;
-        최저기온:{Math.min(...weatherData.hourly.temperature_2m)}°C
-        <br></br>
-        일출: 오전 {earlyTime(weatherData.daily.sunrise[0])} &nbsp; 일몰: 오후
+        일출: 오전 {earlyTime(selectedDayWeather.sunrise[0])} &nbsp; 일몰: 오후
         &nbsp;{earlyTime(weatherData.daily.sunset[0])}
       </TodayMain>
       {showWeatherInfo && selectedDayWeather && (
