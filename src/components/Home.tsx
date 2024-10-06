@@ -4,6 +4,7 @@ import WeatherChart from "./WeatherChart";
 import { WeatherContainer } from "../styles/CommonStyles";
 import { main } from "../api";
 import { getWeatherCode, getWeatherBackgroundImage } from "../weatherCode";
+import weatherUv from "../weatherUv";
 
 // css
 const WeatherLi = styled.ul`
@@ -112,6 +113,7 @@ const Home: React.FC = () => {
         weatherCode: weatherData.daily.weather_code[index],
         sunrise: weatherData.daily.sunrise[index],
         sunset: weatherData.daily.sunset[index],
+        uv: weatherData.daily.uv_index_max[index],
       };
     }
   );
@@ -206,6 +208,22 @@ const Home: React.FC = () => {
       ? selectedDayTemperatures[timeIndex]
       : selectedDayTemperatures[0];
   };
+  // 현 시간대 선택한날짜 바람속도
+  const getCurrentWindspeed = (): number => {
+    const now = new Date();
+    const currentHour = now.getHours();
+
+    // 현재 선택된 날짜의 시간대와 매칭되는 바람 속도를 찾음
+    const timeIndex = selectedDayTimes.findIndex((time: string) => {
+      const date = new Date(time);
+      return date.getHours() === currentHour;
+    });
+
+    // 해당 시간대의 바람 속도를 반환, 없다면 첫 번째 값을 기본값으로 사용
+    return timeIndex !== -1
+      ? selectedDayWindspeed[timeIndex]
+      : selectedDayWindspeed[0];
+  };
   return (
     <WeatherContainer
       backgroundImage={getWeatherBackgroundImage(
@@ -261,10 +279,10 @@ const Home: React.FC = () => {
             일출: 오전 {earlyTime(selectedDayWeather.sunrise)} &nbsp; 일몰: 오후
             &nbsp;{earlyTime(selectedDayWeather.sunset)}
             &nbsp; 체감온도:
-            {temp(
-              weatherData.current_weather.temperature,
-              weatherData.current_weather.windSpeed
-            )}
+            {temp(getCurrentTemperature(), getCurrentWindspeed())}°C
+            <br></br>
+            자외선 지수:
+            {weatherUv(selectedDayWeather.uv)}
           </TodayMain>
           <WeatherLi>
             {selectedDayTimes.map((time: string, index: number) => (
