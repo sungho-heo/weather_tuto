@@ -14,11 +14,14 @@ const WeatherLi = styled.ul`
   justify-content: center;
 `;
 
-const TodayMain = styled.h2`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+const WeatherCard = styled.div`
+  background-color: #f9f9f9; /* 배경색으로 가독성 높이기 */
+  padding: 20px;
+  border-radius: 10px; /* 모서리 둥글게 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+  width: 300px; /* 적절한 너비 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
 `;
 
 const ToggleButtons = styled.div`
@@ -261,44 +264,58 @@ const Home: React.FC = () => {
             <br />
             {getWeatherCode(day.weatherCode)}
             <br />
-            {day.maxTemp}°C / {day.minTemp}°C
+            {day.maxTemp}° / {day.minTemp}°
           </DaySummary>
         ))}
       </WeekWeatherSummary>
       {showWeatherInfo && selectedDayWeather && (
         <div>
-          <TodayMain>
-            {geoData[2]} {geoData[1]}&nbsp; 날짜:{todayMonth}.{todayDay} 기온:
-            {getCurrentTemperature()}°C &nbsp;
-            <br></br>
-            최고 기온:
-            {selectedDayWeather.maxTemp}°C 최저 기온:
-            {selectedDayWeather.minTemp}°C 날씨:
-            {getWeatherCode(selectedDayWeather.weatherCode)}
-            <br></br>
-            일출: 오전 {earlyTime(selectedDayWeather.sunrise)} &nbsp; 일몰: 오후
-            &nbsp;{earlyTime(selectedDayWeather.sunset)}
-            &nbsp; 체감온도:
-            {temp(getCurrentTemperature(), getCurrentWindspeed())}°C
-            <br></br>
-            자외선 지수:
-            {weatherUv(selectedDayWeather.uv)}
-          </TodayMain>
+          <WeatherCard>
+            <div>
+              <h2>
+                {geoData[2]} {geoData[1]}
+              </h2>
+              <p>
+                날짜:{todayMonth}.{todayDay}
+              </p>
+            </div>
+            <div>
+              <p>
+                현재 기온:
+                <strong>{getCurrentTemperature()}°</strong>
+              </p>
+              <p>{getWeatherCode(selectedDayWeather.weatherCode)}</p>
+              <p>
+                최고:
+                {selectedDayWeather.maxTemp}° /최저:
+                {selectedDayWeather.minTemp}°
+              </p>
+            </div>
+            <div>
+              <p>
+                일출:{earlyTime(selectedDayWeather.sunrise)} /일몰:
+                {earlyTime(selectedDayWeather.sunset)}
+              </p>
+              체감온도:
+              {temp(getCurrentTemperature(), getCurrentWindspeed())}°<br></br>
+              자외선:
+              {weatherUv(selectedDayWeather.uv)}
+            </div>
+          </WeatherCard>
           <WeatherLi>
             {selectedDayTimes.map((time: string, index: number) => (
               <li key={time}>
                 <h3>
-                  {formatTimeTo12Hour(time)}: {selectedDayTemperatures[index]}°C
+                  {formatTimeTo12Hour(time)}: {selectedDayTemperatures[index]}°
                   &nbsp; 체감온도:
                   {temp(
                     selectedDayTemperatures[index],
                     selectedDayWindspeed[index]
                   )}
-                  °C
-                  <br></br>
+                  °<br></br>
                   날씨: {getWeatherCode(selectedDayWeatherCodes[index])}
                   <br></br>
-                  습도:{selectedDayHumidity[index]}%
+                  <p>습도:{selectedDayHumidity[index]}%</p>
                 </h3>
               </li>
             ))}
