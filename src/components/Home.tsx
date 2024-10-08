@@ -17,11 +17,20 @@ const WeatherLi = styled.ul`
 const WeatherCard = styled.div`
   background-color: #f9f9f9; /* 배경색으로 가독성 높이기 */
   padding: 20px;
+  border: 1px solid black;
   border-radius: 10px; /* 모서리 둥글게 */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
   text-align: center; /* 텍스트 중앙 정렬 */
   width: 300px; /* 적절한 너비 설정 */
-  margin: 0 auto; /* 가운데 정렬 */
+  margin: 20px auto; /* 가운데 정렬 */
+  h2{
+    font-weight: bold;
+    font-size: 18px;
+  }
+    p{
+    font-size: 16px;
+    }
+  }
 `;
 
 const ToggleButtons = styled.div`
@@ -56,6 +65,11 @@ const DaySummary = styled.div`
     font-weight: bold;
     color: #3498db;
   }
+`;
+// 날씨 다른 정보
+const OtherInfo = styled.div`
+  font-size: 16px;
+  color: #777;
 `;
 
 const Home: React.FC = () => {
@@ -291,16 +305,17 @@ const Home: React.FC = () => {
                 {selectedDayWeather.minTemp}°
               </p>
             </div>
-            <div>
+            <OtherInfo>
               <p>
                 일출:{earlyTime(selectedDayWeather.sunrise)} /일몰:
                 {earlyTime(selectedDayWeather.sunset)}
               </p>
-              체감온도:
-              {temp(getCurrentTemperature(), getCurrentWindspeed())}°<br></br>
-              자외선:
-              {weatherUv(selectedDayWeather.uv)}
-            </div>
+              <p>
+                체감온도:
+                {temp(getCurrentTemperature(), getCurrentWindspeed())}° 자외선:
+                {weatherUv(selectedDayWeather.uv)}
+              </p>
+            </OtherInfo>
           </WeatherCard>
           <WeatherLi>
             {selectedDayTimes.map((time: string, index: number) => (
