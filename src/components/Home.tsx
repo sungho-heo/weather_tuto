@@ -7,11 +7,26 @@ import { getWeatherCode, getWeatherBackgroundImage } from "../weatherCode";
 import weatherUv from "../weatherUv";
 
 // css
-const WeatherLi = styled.ul`
+const WeatherLi = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  width: 100%;
+  grid-template-columns: repeat(24, 100px);
+  grid-auto-rows: minmax(50px, auto);
+  gap: 10px;
+  overflow-x: auto; /* 가로 스크롤 활성화 */
+  padding: 20px;
+  white-space: nowrap;
+`;
+
+const WeatherItem = styled.div`
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
 `;
 
 const WeatherCard = styled.div`
@@ -319,20 +334,21 @@ const Home: React.FC = () => {
           </WeatherCard>
           <WeatherLi>
             {selectedDayTimes.map((time: string, index: number) => (
-              <li key={time}>
-                <h3>
+              <WeatherItem key={time}>
+                <h4>
                   {formatTimeTo12Hour(time)}: {selectedDayTemperatures[index]}°
-                  &nbsp; 체감온도:
+                </h4>
+                <p>
+                  체감온도:
                   {temp(
                     selectedDayTemperatures[index],
                     selectedDayWindspeed[index]
                   )}
-                  °<br></br>
-                  날씨: {getWeatherCode(selectedDayWeatherCodes[index])}
-                  <br></br>
-                  <p>습도:{selectedDayHumidity[index]}%</p>
-                </h3>
-              </li>
+                  °
+                </p>
+                <p>날씨: {getWeatherCode(selectedDayWeatherCodes[index])}</p>
+                <p>습도:{selectedDayHumidity[index]}%</p>
+              </WeatherItem>
             ))}
           </WeatherLi>
         </div>
