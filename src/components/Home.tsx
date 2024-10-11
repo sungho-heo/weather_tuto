@@ -7,17 +7,18 @@ import { getWeatherCode, getWeatherBackgroundImage } from "../weatherCode";
 import weatherUv from "../weatherUv";
 
 // css
+
 const WeatherLi = styled.div`
-  display: grid;
-  grid-template-columns: repeat(24, 100px);
-  grid-auto-rows: minmax(50px, auto);
+  display: flex;
   gap: 10px;
-  overflow-x: auto; /* 가로 스크롤 활성화 */
+  overflow-x: auto;
   padding: 20px;
-  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth; /* 부드러운 스크롤 적용하기 */
 `;
 
 const WeatherItem = styled.div`
+  flex: 0 0 20%; /* 화면에 5개만 보이게 설정 */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -27,6 +28,7 @@ const WeatherItem = styled.div`
   border: 1px solid #ccc;
   border-radius: 10px;
   background-color: #f9f9f9;
+  scroll-snap-align: start;
 `;
 
 const WeatherCard = styled.div`
