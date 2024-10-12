@@ -3,8 +3,11 @@ import styled from "styled-components";
 import WeatherChart from "./WeatherChart";
 import { WeatherContainer } from "../styles/CommonStyles";
 import { main } from "../api";
-import { getWeatherCode, getWeatherBackgroundImage } from "../weatherCode";
-import weatherUv from "../weatherUv";
+import {
+  getWeatherCode,
+  getWeatherBackgroundImage,
+} from "../utils/weatherCode";
+import weatherUv from "../utils/weatherUv";
 
 // css
 
