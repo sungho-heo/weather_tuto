@@ -8,6 +8,7 @@ import {
   getWeatherBackgroundImage,
 } from "../utils/weatherCode";
 import weatherUv from "../utils/weatherUv";
+import weatherClothing from "../utils/weatherClothing";
 
 // css
 
@@ -334,6 +335,10 @@ const Home: React.FC = () => {
                 체감온도:
                 {temp(getCurrentTemperature(), getCurrentWindspeed())}° 자외선:
                 {weatherUv(selectedDayWeather.uv)}
+              </p>
+              <p>
+                오늘의 옷차림:
+                {weatherClothing(getCurrentTemperature())}
               </p>
             </OtherInfo>
           </WeatherCard>
