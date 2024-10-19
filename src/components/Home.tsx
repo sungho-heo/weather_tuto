@@ -295,11 +295,13 @@ const Home: React.FC = () => {
             className={selectedDate === index ? "active" : ""}
             onClick={() => handleDayClick(index)}
           >
-            {day.date.getMonth() + 1}/{day.date.getDate()}
-            <br />
-            {getWeatherCode(day.weatherCode)}
-            <br />
-            {day.maxTemp}° / {day.minTemp}°
+            <p>
+              {day.date.getMonth() + 1}/{day.date.getDate()}
+            </p>
+            <p>{getWeatherCode(day.weatherCode)}</p>
+            <p>
+              {day.maxTemp}° / {day.minTemp}°
+            </p>
           </DaySummary>
         ))}
       </WeekWeatherSummary>
@@ -308,7 +310,7 @@ const Home: React.FC = () => {
           <WeatherCard>
             <div>
               <h2>
-                {geoData[2]} {geoData[1]}
+                지역: {geoData[2]} {geoData[1]}
               </h2>
               <p>
                 날짜:{todayMonth}.{todayDay}
