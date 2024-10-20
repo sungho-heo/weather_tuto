@@ -300,7 +300,7 @@ const Home: React.FC = () => {
             </p>
             <p>{getWeatherCode(day.weatherCode)}</p>
             <p>
-              {day.maxTemp}° / {day.minTemp}°
+              최고/최저기온:{day.maxTemp}° / {day.minTemp}°
             </p>
           </DaySummary>
         ))}
