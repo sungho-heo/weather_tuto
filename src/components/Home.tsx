@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import WeatherCard from "./WeatherCard";
+import WeekSummary from "./WeekSummary";
 import styled from "styled-components";
 import WeatherChart from "./WeatherChart";
 import { WeatherContainer } from "../styles/CommonStyles";
@@ -7,12 +9,10 @@ import {
   getWeatherCode,
   getWeatherBackgroundImage,
 } from "../utils/weatherCode";
-import { earlyTime, formatTimeTo12Hour, temp } from "../utils/helpers";
-import weatherUv from "../utils/weatherUv";
+import { formatTimeTo12Hour, temp } from "../utils/helpers";
 import weatherClothing from "../utils/weatherClothing";
 
 // css
-
 const WeatherLi = styled.div`
   display: flex;
   gap: 10px;
@@ -36,25 +36,6 @@ const WeatherItem = styled.div`
   scroll-snap-align: start;
 `;
 
-const WeatherCard = styled.div`
-  background-color: #f9f9f9; /* 배경색으로 가독성 높이기 */
-  padding: 20px;
-  border: 1px solid black;
-  border-radius: 10px; /* 모서리 둥글게 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
-  text-align: center; /* 텍스트 중앙 정렬 */
-  width: 300px; /* 적절한 너비 설정 */
-  margin: 20px auto; /* 가운데 정렬 */
-  h2{
-    font-weight: bold;
-    font-size: 18px;
-  }
-    p{
-    font-size: 16px;
-    }
-  }
-`;
-
 const ToggleButtons = styled.div`
   display: flex;
   justify-content: center;
@@ -72,25 +53,6 @@ const Button = styled.button`
   &:hover {
     background-color: #2980b9;
   }
-`;
-
-// 일주알 데이터 css
-const WeekWeatherSummary = styled.div`
-  display: flex;
-  justify-content: space-around;
-  margin: 20px 0;
-`;
-const DaySummary = styled.div`
-  text-align: center;
-  cursor: pointer;
-  &.active {
-    font-weight: bold;
-    color: #3498db;
-  }
-`;
-
-const OtherInfo = styled.div`
-  font-size: 16px;
 `;
 
 const Home: React.FC = () => {
@@ -250,64 +212,27 @@ const Home: React.FC = () => {
           그래프 날씨 데이터
         </Button>
       </ToggleButtons>
-
       {/* 일주일치 요약 */}
-      <WeekWeatherSummary>
-        {weeklyWeatherData.map((day: any, index: number) => (
-          <DaySummary
-            key={index}
-            className={selectedDate === index ? "active" : ""}
-            onClick={() => handleDayClick(index)}
-          >
-            <p>
-              {day.date.getMonth() + 1}/{day.date.getDate()}
-            </p>
-            <p>{getWeatherCode(day.weatherCode)}</p>
-            <p>
-              최고/최저기온:{day.maxTemp}° / {day.minTemp}°
-            </p>
-          </DaySummary>
-        ))}
-      </WeekWeatherSummary>
+      <WeekSummary
+        weeklyWeatherData={weeklyWeatherData}
+        selectedDate={selectedDate}
+        handleDayClick={handleDayClick}
+      />
       {showWeatherInfo && selectedDayWeather && (
         <div>
-          <WeatherCard>
-            <div>
-              <h2>
-                지역: {geoData[2]} {geoData[1]}
-              </h2>
-              <p>
-                날짜:{todayMonth}.{todayDay}
-              </p>
-            </div>
-            <div>
-              <p>
-                현재 기온:
-                <strong>{getCurrentTemperature()}°</strong>
-              </p>
-              <p>{getWeatherCode(selectedDayWeather.weatherCode)}</p>
-              <p>
-                최고:
-                {selectedDayWeather.maxTemp}° /최저:
-                {selectedDayWeather.minTemp}°
-              </p>
-            </div>
-            <OtherInfo>
-              <p>
-                일출:{earlyTime(selectedDayWeather.sunrise)} /일몰:
-                {earlyTime(selectedDayWeather.sunset)}
-              </p>
-              <p>
-                체감온도:
-                {temp(getCurrentTemperature(), getCurrentWindspeed())}° 자외선:
-                {weatherUv(selectedDayWeather.uv)}
-              </p>
-              <p>
-                오늘의 옷차림:
-                {weatherClothing(getCurrentTemperature())}
-              </p>
-            </OtherInfo>
-          </WeatherCard>
+          <WeatherCard
+            location={`${geoData[2]} ${geoData[1]}`}
+            date={`${todayMonth}.${todayDay}`}
+            weatherCode={selectedDayWeather.weatherCode}
+            currentTemp={getCurrentTemperature()}
+            maxTemp={selectedDayWeather.maxTemp}
+            minTemp={selectedDayWeather.minTemp}
+            sunrise={selectedDayWeather.sunrise}
+            sunset={selectedDayWeather.sunset}
+            uvIndex={selectedDayWeather.uv}
+            windSpeed={getCurrentWindspeed()}
+            clothing={weatherClothing(getCurrentTemperature())}
+          />
           <WeatherLi>
             {selectedDayTimes.map((time: string, index: number) => (
               <WeatherItem key={time}>

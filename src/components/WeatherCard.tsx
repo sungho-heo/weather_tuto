@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { temp, earlyTime } from "../utils/helpers";
+import weatherUv from "../utils/weatherUv";
 import { getWeatherCode } from "../utils/weatherCode";
 
 const Card = styled.div`
@@ -80,7 +81,7 @@ const WeatherCard: React.FC<WeatherCardProps> = ({
         <p>
           체감온도:
           {temp(currentTemp, windSpeed)}° 자외선:
-          {uvIndex}
+          {weatherUv(uvIndex)}
         </p>
         <p>
           오늘의 옷차림:

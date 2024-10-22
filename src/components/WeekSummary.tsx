@@ -48,3 +48,5 @@ const WeekSummary: React.FC<WeekSummaryProps> = ({
     </Summary>
   );
 };
+
+export default WeekSummary;
