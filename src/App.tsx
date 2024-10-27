@@ -1,13 +1,17 @@
 import React from "react";
+import { Provider } from "react-redux";
 import { createGlobalStyle } from "styled-components";
 import Home from "./components/Home";
+import { store } from "./store";
 
 const App: React.FC = () => {
   return (
-    <div>
-      <GlobalStyle />
-      <Home />
-    </div>
+    <Provider store={store}>
+      <div>
+        <GlobalStyle />
+        <Home />
+      </div>
+    </Provider>
   );
 };
 

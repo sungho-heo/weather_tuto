@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import WeatherCard from "./WeatherCard";
 import WeekSummary from "./WeekSummary";
 import styled from "styled-components";
 import WeatherChart from "./WeatherChart";
 import { WeatherContainer } from "../styles/CommonStyles";
 import { main } from "../api";
+import { RootState, AppDispatch } from "../store";
+import {
+  fetchWeatherData,
+  setSelectedDate,
+  setShowWeatherInfo,
+  setShowChart,
+} from "../weatherSlice";
 import {
   getWeatherCode,
   getWeatherBackgroundImage,
@@ -56,27 +64,41 @@ const Button = styled.button`
 `;
 
 const Home: React.FC = () => {
-  const [weatherData, setWeatherData] = useState<any>(null);
-  const [geoData, setgeoData] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [showWeatherInfo, setShowWeatherInfo] = useState<boolean>(true); // 기본적으로 보여주는 날씨데이터
-  const [showChart, setShowChart] = useState<boolean>(false); // 그래프 형태의 날씨데이터.
-  const [selectedDate, setSelectedDate] = useState<number>(0);
+  // const [weatherData, setWeatherData] = useState<any>(null);
+  // const [geoData, setgeoData] = useState<any>(null);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [showWeatherInfo, setShowWeatherInfo] = useState<boolean>(true); // 기본적으로 보여주는 날씨데이터
+  // const [showChart, setShowChart] = useState<boolean>(false); // 그래프 형태의 날씨데이터.
+  // const [selectedDate, setSelectedDate] = useState<number>(0);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const {
+    weatherData,
+    geoData,
+    loading,
+    selectedDate,
+    showWeatherInfo,
+    showChart,
+  } = useSelector((state: RootState) => state.weather);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const data = await main(); // main 함수 호출
-      if (data?.locationData) {
-        const listData = data?.locationData.split(",");
-        setgeoData(listData);
-      }
-      setWeatherData(data?.weatherData); // 받아온 데이터 저장
-      setLoading(false);
-    };
+    dispatch(fetchWeatherData());
+  }, [dispatch]);
 
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     const data = await main(); // main 함수 호출
+  //     if (data?.locationData) {
+  //       const listData = data?.locationData.split(",");
+  //       setgeoData(listData);
+  //     }
+  //     setWeatherData(data?.weatherData); // 받아온 데이터 저장
+  //     setLoading(false);
+  //   };
+
+  //   fetchData();
+  // }, []);
   if (loading) {
     return <h1>Loading...</h1>;
   }
@@ -122,9 +144,10 @@ const Home: React.FC = () => {
 
   // 요약 날짜 클릭 시 선택된 날짜 업데이트
   const handleDayClick = (index: number) => {
-    setSelectedDate(index);
-    setShowWeatherInfo(true);
-    setShowChart(false);
+    dispatch(setSelectedDate(index));
+    dispatch(setShowWeatherInfo(true));
+    // setShowWeatherInfo(true);
+    // setShowChart(false);
   };
 
   // 해당 날짜 시간대별 습도, 날씨상황, 풍속
@@ -197,16 +220,16 @@ const Home: React.FC = () => {
       <ToggleButtons>
         <Button
           onClick={() => {
-            setShowWeatherInfo(true);
-            setShowChart(false);
+            dispatch(setShowWeatherInfo(true));
+            dispatch(setShowChart(false));
           }}
         >
           기본 날씨 데이터
         </Button>
         <Button
           onClick={() => {
-            setShowWeatherInfo(false);
-            setShowChart(true);
+            dispatch(setShowWeatherInfo(false));
+            dispatch(setShowChart(true));
           }}
         >
           그래프 날씨 데이터

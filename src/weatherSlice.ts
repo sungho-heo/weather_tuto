@@ -1,8 +1,31 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { main } from "./api";
 
+// type
+
+interface WeatherDataType {
+  hourly: {
+    temperature_2m: number[];
+    relative_humidity_2m: number[];
+    weathercode: number[];
+    wind_speed_10m: number[];
+    time: string[];
+  };
+  daily: {
+    temperature_2m_max: number[];
+    temperature_2m_min: number[];
+    weather_code: number[];
+    sunrise: string[];
+    sunset: string[];
+    uv_index_max: number[];
+  };
+  current_weather: {
+    weathercode: number;
+  };
+}
+
 // 날씨 데이터 가져오는 비동기 액션.
-const fetchWeatherData = createAsyncThunk(
+export const fetchWeatherData = createAsyncThunk(
   "weather/fetchWeatherData",
   async () => {
     const data = await main();
@@ -13,24 +36,24 @@ const fetchWeatherData = createAsyncThunk(
 const weatherSlice = createSlice({
   name: "weather",
   initialState: {
-    weatherData: null,
-    geoData: null as null | string[],
+    weatherData: null as WeatherDataType | null,
+    geoData: [] as string[],
     loading: true,
     selectedDate: 0,
     showWeatherInfo: true,
     showChart: false,
   },
   reducers: {
-    setSelectedDate: (state, action) => {
+    setSelectedDate: (state, action: PayloadAction<number>) => {
       state.selectedDate = action.payload;
     },
-    setShowWeatherInfo: (state) => {
-      state.showWeatherInfo = true;
-      state.showChart = false;
+    setShowWeatherInfo: (state, action: PayloadAction<boolean>) => {
+      state.showWeatherInfo = action.payload;
+      state.showChart = !action.payload; // showWeatherInfo와 showChart를 toggle
     },
-    setShowChart: (state) => {
-      state.showWeatherInfo = false;
-      state.showChart = true;
+    setShowChart: (state, action: PayloadAction<boolean>) => {
+      state.showChart = action.payload;
+      state.showWeatherInfo = !action.payload; // showWeatherInfo와 showChart를 toggle
     },
   },
   extraReducers: (builder) => {
@@ -40,7 +63,7 @@ const weatherSlice = createSlice({
       })
       .addCase(fetchWeatherData.fulfilled, (state, action) => {
         if (action.payload) {
-          state.weatherData = action.payload.weatherData;
+          state.weatherData = action.payload.weatherData as WeatherDataType;
           state.geoData = action.payload.locationData
             ? action.payload.locationData.split(",")
             : [];
