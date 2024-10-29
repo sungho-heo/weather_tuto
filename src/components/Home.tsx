@@ -145,8 +145,6 @@ const Home: React.FC = () => {
   const handleDayClick = (index: number) => {
     dispatch(setSelectedDate(index));
     dispatch(setShowWeatherInfo(true));
-    // setShowWeatherInfo(true);
-    // setShowChart(false);
   };
 
   // 해당 날짜 시간대별 습도, 날씨상황, 풍속
