@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 
 // type
 interface NominatimResult {
@@ -8,8 +7,8 @@ interface NominatimResult {
 
 const BaseUrl = "https://api.open-meteo.com/v1/forecast";
 
-// OpenStreetMap 역지오코딩 api
-const getLocationFromCoordinates = async (
+// OpenStreetMap 지역 api
+export const getLocationFromCoordinates = async (
   lat: number,
   lon: number
 ): Promise<string | null> => {
@@ -38,7 +37,7 @@ const getLocationFromCoordinates = async (
 };
 
 // 브라우저의 Geolocation API를 통해서 사용자의 위치정보 데이터를 얻어옴.
-const getUserLocation = (): Promise<GeolocationPosition> => {
+export const getUserLocation = (): Promise<GeolocationPosition> => {
   return new Promise((resolve, reject) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -49,7 +48,7 @@ const getUserLocation = (): Promise<GeolocationPosition> => {
 };
 
 // 자외선 데이터도 받아오기
-const fetchWeatherData = async (lat: number, lon: number) => {
+export const fetchWeatherData = async (lat: number, lon: number) => {
   try {
     const response = await axios.get(BaseUrl, {
       params: {

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import WeatherCard from "./WeatherCard";
-import WeekSummary from "./WeekSummary";
 import styled from "styled-components";
+import WeekSummary from "./WeekSummary";
+import WeatherCard from "./WeatherCard";
 import WeatherChart from "./WeatherChart";
 import { WeatherContainer } from "../styles/CommonStyles";
 import { RootState, AppDispatch } from "../store";
