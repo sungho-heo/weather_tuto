@@ -19,3 +19,4 @@
 15. 날씨에 따른 배경 변환 [x]
 16. redux add [x]
 17. github.io 배포 [x]
+18. dev 환경과 production 환경 나눔 설정 [x]
