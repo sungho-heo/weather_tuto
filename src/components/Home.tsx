@@ -63,6 +63,7 @@ const Button = styled.button`
 `;
 
 const Home: React.FC = () => {
+  // redux 사용안한 방식.
   // const [weatherData, setWeatherData] = useState<any>(null);
   // const [geoData, setgeoData] = useState<any>(null);
   // const [loading, setLoading] = useState<boolean>(true);
@@ -84,6 +85,7 @@ const Home: React.FC = () => {
     dispatch(fetchWeatherData());
   }, [dispatch]);
 
+  // redux 사용안한 방식.
   // useEffect(() => {
   //   const fetchData = async () => {
   //     setLoading(true);
